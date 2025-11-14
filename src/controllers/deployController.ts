@@ -6,6 +6,7 @@ import { getAllFiles } from "../utils/file.js";
 import { uploadFile } from "../s3/uploadToS3.js"
 import {createClient} from "redis";
 import type { Request, Response } from 'express';
+import {clearBuildFolders} from "../utils/ clearFolder.js"
 
 
 const publisher = createClient();
@@ -31,7 +32,6 @@ export const deployService = async function (req: Request, res: Response) {
   for (const file of files) {
     if (file.includes(".git") || file.includes(".DS_Store")) continue;
     console.log("📤 Uploading:", file);
-    console.log(__dirname);
     await uploadFile("output/" + file.slice(outputDir.length + 1), file);
   }
 
@@ -39,7 +39,9 @@ export const deployService = async function (req: Request, res: Response) {
   await publisher.hSet("status", id, "uploading");
   await publisher.lPush("build-queue", id);
 
-  res.json({ id});
+  const endUrl = `${id}.sunildev.com`;
+  await clearBuildFolders();
+  res.json({endUrl});
 } catch (err) {
   console.error("❌ Error during deployService:", err);
   res.status(500).json({ error : "Internal Server Error" });
