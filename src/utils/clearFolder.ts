@@ -4,10 +4,7 @@ import util from "util";
 const execPromise = util.promisify(exec);
 
 export async function clearBuildFolders() {
-  const cmd = `
-  rm -rf ~/vercel-upload-service/output/*
-    
-  `;
+  const cmd = `rm -rf /app/output/*`;
 
   try {
     const { stdout, stderr } = await execPromise(cmd);
@@ -15,6 +12,5 @@ export async function clearBuildFolders() {
     if (stderr) console.error("stderr:", stderr);
   } catch (error) {
     console.error("clearBuildFolders() Error:", error);
-    
   }
 }
