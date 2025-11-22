@@ -45,7 +45,7 @@ export const deployService = async function (req: Request, res: Response) {
     await publisher.lPush("build-queue", id);
 
     const endUrl = `${id}.sunildev.com`;
-    await clearBuildFolders();
+    await clearBuildFolders(id);
     res.json({ endUrl });
   } catch (err) {
     console.error("❌ Error during deployService:", err);

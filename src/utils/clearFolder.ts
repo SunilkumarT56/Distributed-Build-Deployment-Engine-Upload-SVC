@@ -3,8 +3,8 @@ import util from "util";
 
 const execPromise = util.promisify(exec);
 
-export async function clearBuildFolders() {
-  const cmd = `rm -rf output/*`;
+export async function clearBuildFolders(id : string) {
+  const cmd = `rm -rf output/${id}`;
 
   try {
     const { stdout, stderr } = await execPromise(cmd);
